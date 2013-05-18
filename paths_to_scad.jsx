@@ -56,7 +56,7 @@ if (selRef.length == 0) {
 	var tName = prompt("Document Name \r .scad extension added automatically. Will overwrite files without warning!", "output");
 	if (tName != null) {
 		var textFile = File('~/Desktop/'+tName+'.scad');
-		textFile.open('e');
+		textFile.open('w');
 		textFile.write(strPolygons);
 		textFile.close();
 		
