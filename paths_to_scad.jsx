@@ -45,8 +45,8 @@ if (selRef.length == 0) {
 				if (j != 0) {
 					strPoints += ",";
 				}
-				var tempX = Math.round(pathRef.pathPoints[j].anchor[0]/.2834645)/10;
-				var tempY = Math.round(pathRef.pathPoints[j].anchor[1]/.2834645)/10;
+				var tempX = Math.round(pathRef.pathPoints[j].anchor[0]/.2834645)/100;
+				var tempY = Math.round(pathRef.pathPoints[j].anchor[1]/.2834645)/100;
 				strPoints += "["+tempX+","+tempY+"]";
 			}
 			strPoints += "]);\n";
