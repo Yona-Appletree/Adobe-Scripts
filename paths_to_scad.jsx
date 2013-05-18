@@ -37,7 +37,7 @@ if (selRef.length == 0) {
 					pathsCounter++;
 				}
 			}
-			strPaths += "]]);";
+			strPaths += "]]);\n";
 			strPolygons += strPoints + strPaths;
 
 		} else {
@@ -49,15 +49,19 @@ if (selRef.length == 0) {
 				var tempY = Math.round(pathRef.pathPoints[j].anchor[1]/.2834645)/10;
 				strPoints += "["+tempX+","+tempY+"]";
 			}
-			strPoints += "]);";
+			strPoints += "]);\n";
 			strPolygons += strPoints;
 		}
 	}
 	var tName = prompt("Document Name \r .scad extension added automatically. Will overwrite files without warning!", "output");
 	if (tName != null) {
 		var textFile = File('~/Desktop/'+tName+'.scad');
+		textFile.lineFeed = "Unix";
 		textFile.open('w');
-		textFile.write(strPolygons);
+		// Automatically add some extrusion, as that's likely what you'll do here
+		textFile.writeln("linear_extrude(height = 10, center = false) {\n");
+		textFile.writeln(strPolygons);
+		textFile.writeln("}");
 		textFile.close();
 		
 		alert("Yay! Check your desktop.");
