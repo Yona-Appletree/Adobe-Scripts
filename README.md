@@ -9,6 +9,12 @@ Collection of scripts for Adobe apps, Illustrator mostly
 **faux_3d.jsx**
 - Select path(s) & run script. *no groups or compound paths*
 
+**paths_to_canvas_beziers.jsx**
+**paths_to_canvas_beziers_variables.jsx**
+- Move path(s) to 0,0 on the artboard to get a decent reference point.
+- Select path(s) & run script. *grouped paths don't work yet*
+These both take a path from Illustrator and output it to canvas bezier, with one creating variable arrays of all the points first.
+
 **paths_to_scad.jsx**
 *you'll likely want to 'Add Anchor Points' (maybe more than once) then 'Simplify Path' with straight lines, as beziers are not allowed.*
 - Move path(s) to 0,0 on the artboard to get a decent reference point.
