@@ -3,248 +3,309 @@
 var docRef = app.activeDocument;
 var newLayerRef = docRef.layers.add();
 
-var mmTOpt = 2.834645669;
+// MILLIMETERS TO POINTS CONSTANT
+var _TO_POINTS = 2.834645669;
 
-var pBoxThickness = prompt("Cardboard Thickness (mm)", "2")*mmTOpt;
-var pBoxLength = prompt("Interior Length (mm)", "191")*mmTOpt;
-var pBoxDepth = prompt("Interior Depth (mm)",  "62")*mmTOpt;
-var pBoxHeight = prompt("Interior Height (mm)", "62")*mmTOpt;
-var strokeW = 2;
+// PROMPTS FOR BOX VALUES
+var pBoxThickness = prompt("Cardboard Thickness (mm)", "2")*_TO_POINTS;
+var pBoxLength = prompt("Interior Length (mm)", "191")*_TO_POINTS;
+var pBoxDepth = prompt("Interior Depth (mm)",  "62")*_TO_POINTS;
+var pBoxHeight = prompt("Interior Height (mm)", "62")*_TO_POINTS;
 
+// INITIALIZE STROKE PROPERTIES
+var strokeW = 1;
 var foldColor = new RGBColor();
 foldColor.red = 255;
 foldColor.green = 23;
 foldColor.blue = 24;
-
 var cutColor = new RGBColor();
 cutColor.red = 24;
 cutColor.green = 255;
 cutColor.blue = 99;
 
-var y1 = -1 * (pBoxHeight*3 + pBoxDepth*2 + pBoxThickness*10);
+// SETUP VALUES FOR BOX SIDES
+var x_start = 10 + pBoxThickness + pBoxDepth + pBoxLength/2;
+/* var y_start = -1 * (pBoxHeight*3 + pBoxDepth*2 + pBoxThickness*10); */
+var y_start = -300 * _TO_POINTS;
 
-var y2 = y1 + pBoxHeight;
-var y3 = y2 - pBoxThickness*2;
-var y4 = y2 - pBoxThickness;
-var y5 = y2 + pBoxThickness;
+// ILLUSTRATOR UNITS START AT TOP LEFT (SO - IS ADDITIVE)
+var x_front_frontflap = pBoxLength/2 + pBoxThickness/2 + pBoxThickness;
+var x_frontflap_edge  = x_front_frontflap + pBoxDepth; // maybe minus some
 
-var y6 = y2 + pBoxDepth;
-var y7 = y6 - pBoxThickness*3;
-var y8 = y6 + pBoxThickness/2;
+var x_bottom_top_edge = x_front_frontflap + pBoxThickness + pBoxThickness/2;
 
-var y9 = y6 + pBoxHeight;
-var y10 = y9 - pBoxThickness;
-var y11 = y9 + pBoxThickness;
+var x_back_side       = x_front_frontflap + pBoxThickness;
+var x_side_edge       = x_back_side + pBoxDepth + pBoxThickness/2;
+var x_sidenotch_1     = x_bottom_top_edge + pBoxDepth/3;
+var x_sidenotch_2     = x_sidenotch_1 + pBoxDepth/3;
 
-var y12 = y9 + pBoxDepth;
-var y13 = y12 + pBoxThickness;
-var y14 = y13 + pBoxThickness;
-
-var y15 = y12 + pBoxHeight;
-var y16 = y15 -pBoxThickness;
+var x_frontcover_frontcoverflap  = x_front_frontflap + pBoxThickness;
+var x_frontcoverflap_edge        = x_frontcover_frontcoverflap + pBoxDepth/2;
 
 
-var x1 = 10;
-var x2 = x1 + pBoxThickness*2;
+var y_front_edge      = y_start;
+var y_front_bottom    = y_front_edge     + pBoxHeight + pBoxThickness/2;
+var y_bottom_back     = y_front_bottom   + pBoxDepth  + pBoxThickness/2;
+var y_back_top        = y_bottom_back    + pBoxHeight + pBoxThickness;
+var y_top_frontcover  = y_back_top       + pBoxDepth  + pBoxThickness/2;
+var y_frontcover_edge = y_top_frontcover + pBoxHeight + pBoxThickness;
 
-var x3 = x2 + pBoxDepth/3;
-var x4 = x3 + pBoxDepth/3;
+var y_side_sidenotchflap         = y_bottom_back + pBoxThickness/2;
+var y_side_sidefoldover          = y_back_top    - pBoxThickness;
+var y_sidefoldover_sidetoothflap = y_back_top    + pBoxThickness;
 
-var x5 = x2 + pBoxDepth;
-var x6 = x5 - pBoxThickness;
-var x7 = x5 + pBoxThickness;
-var x8 = x5 + pBoxThickness*2;
+var y_frontflap_bottomedge = y_front_bottom         - pBoxThickness;
+var y_frontflap_clearance  = y_frontflap_bottomedge - pBoxThickness;
 
-var x9 = x5 + pBoxLength;
-var x10 = x9 - pBoxThickness*2;
-var x11 = x9 - pBoxThickness;
-var x12 = x9 + pBoxThickness;
+var y_sidenotchflap_topedge    = Math.max( y_side_sidenotchflap - pBoxLength/2 - pBoxThickness/2 - pBoxThickness*2 , y_frontflap_bottomedge);
+var y_sidenotch_topedge        = y_side_sidenotchflap - pBoxThickness*2;
+var y_sidetoothflap_bottomedge = y_sidefoldover_sidetoothflap + pBoxHeight + pBoxThickness/2;
+var y_sidetooth_bottomedge     = y_sidetoothflap_bottomedge + pBoxThickness + pBoxThickness/2;
 
-var x13 = x9 + pBoxDepth/3;
-var x14 = x13 + pBoxDepth/3;
+var y_frontcoverflap_topedge         = y_top_frontcover + pBoxThickness;
+var y_frontcoverflap_topclearnace    = y_top_frontcover + pBoxThickness*3;
+var y_frontcoverflap_bottomclearance = y_frontcover_edge - pBoxThickness*2;
 
-var x15 = x9 + pBoxDepth;
-var x16 = x15 - pBoxThickness*2;
 
-var boxFold1 = newLayerRef.pathItems.add();
-boxFold1.filled = false;
-boxFold1.stroked = true;
-boxFold1.strokeWidth = strokeW;
-boxFold1.strokeColor = foldColor;
-boxFold1.closed = false;
-boxFold1.setEntirePath(new Array(
-	[x8,  y1],
-	[x8,  y4],
-	[x6,  y2],
-	[x12, y2],
-	[x10, y4],
-	[x10, y1]
+// MAKE THE PATHS
+var front_bottom_fold = newLayerRef.pathItems.add();
+front_bottom_fold.filled = false;
+front_bottom_fold.stroked = true;
+front_bottom_fold.strokeWidth = strokeW;
+front_bottom_fold.strokeColor = foldColor;
+front_bottom_fold.closed = false;
+front_bottom_fold.setEntirePath(new Array(
+	[x_start+x_bottom_top_edge, y_front_bottom],
+	[x_start-x_bottom_top_edge, y_front_bottom]
 ));
-var boxFold2 = newLayerRef.pathItems.add();
-boxFold2.filled = false;
-boxFold2.stroked = true;
-boxFold2.strokeWidth = strokeW;
-boxFold2.strokeColor = foldColor;
-boxFold2.closed = false;
-boxFold2.setEntirePath(new Array(
-	[x1,  y8],
-	[x5,  y8],
-	[x6,  y6],
-	[x12, y6],
-	[x9,  y8],
-	[x15, y8]
+var bottom_back_fold = newLayerRef.pathItems.add();
+bottom_back_fold.filled = false;
+bottom_back_fold.stroked = true;
+bottom_back_fold.strokeWidth = strokeW;
+bottom_back_fold.strokeColor = foldColor;
+bottom_back_fold.closed = false;
+bottom_back_fold.setEntirePath(new Array(
+	[x_start+x_bottom_top_edge,  y_bottom_back],
+	[x_start-x_bottom_top_edge, y_bottom_back]
 ));
-var boxFold3 = newLayerRef.pathItems.add();
-boxFold3.filled = false;
-boxFold3.stroked = true;
-boxFold3.strokeWidth = strokeW;
-boxFold3.strokeColor = foldColor;
-boxFold3.closed = false;
-boxFold3.setEntirePath(new Array(
-	[x1,  y10],
-	[x5,  y10],
-	[x6,  y9],
-	[x12, y9],
-	[x9,  y10],
-	[x15, y10]
+var back_top_fold = newLayerRef.pathItems.add();
+back_top_fold.filled = false;
+back_top_fold.stroked = true;
+back_top_fold.strokeWidth = strokeW;
+back_top_fold.strokeColor = foldColor;
+back_top_fold.closed = false;
+back_top_fold.setEntirePath(new Array(
+	[x_start+x_bottom_top_edge,  y_back_top],
+	[x_start-x_bottom_top_edge, y_back_top]
 ));
-var boxFold4 = newLayerRef.pathItems.add();
-boxFold4.filled = false;
-boxFold4.stroked = true;
-boxFold4.strokeWidth = strokeW;
-boxFold4.strokeColor = foldColor;
-boxFold4.closed = false;
-boxFold4.setEntirePath(new Array(
-	[x8,  y15],
-	[x8,  y13],
-	[x6,  y12],
-	[x12, y12],
-	[x10, y13],
-	[x10, y15]
+var top_frontcover_fold = newLayerRef.pathItems.add();
+top_frontcover_fold.filled = false;
+top_frontcover_fold.stroked = true;
+top_frontcover_fold.strokeWidth = strokeW;
+top_frontcover_fold.strokeColor = foldColor;
+top_frontcover_fold.closed = false;
+top_frontcover_fold.setEntirePath(new Array(
+	[x_start+x_bottom_top_edge, y_top_frontcover],
+	[x_start-x_bottom_top_edge, y_top_frontcover]
 ));
-var boxFold5 = newLayerRef.pathItems.add();
-boxFold5.filled = false;
-boxFold5.stroked = true;
-boxFold5.strokeWidth = strokeW;
-boxFold5.strokeColor = foldColor;
-boxFold5.closed = false;
-boxFold5.setEntirePath(new Array(
-	[x1,  y11],
-	[x6,  y11]
+var sidenotchflap_side_fold = newLayerRef.pathItems.add();
+sidenotchflap_side_fold.filled = false;
+sidenotchflap_side_fold.stroked = true;
+sidenotchflap_side_fold.strokeWidth = strokeW;
+sidenotchflap_side_fold.strokeColor = foldColor;
+sidenotchflap_side_fold.closed = false;
+sidenotchflap_side_fold.setEntirePath(new Array(
+	[x_start+x_back_side,  y_side_sidenotchflap],
+	[x_start+x_side_edge,  y_side_sidenotchflap]
 ));
-var boxFold6 = newLayerRef.pathItems.add();
-boxFold6.filled = false;
-boxFold6.stroked = true;
-boxFold6.strokeWidth = strokeW;
-boxFold6.strokeColor = foldColor;
-boxFold6.closed = false;
-boxFold6.setEntirePath(new Array(
-	[x12,  y11],
-	[x15,  y11]
+var side_sidefoldover_fold = newLayerRef.pathItems.add();
+side_sidefoldover_fold.filled = false;
+side_sidefoldover_fold.stroked = true;
+side_sidefoldover_fold.strokeWidth = strokeW;
+side_sidefoldover_fold.strokeColor = foldColor;
+side_sidefoldover_fold.closed = false;
+side_sidefoldover_fold.setEntirePath(new Array(
+	[x_start+x_back_side,  y_side_sidefoldover],
+	[x_start+x_side_edge,  y_side_sidefoldover]
 ));
-var boxFold7 = newLayerRef.pathItems.add();
-boxFold7.filled = false;
-boxFold7.stroked = true;
-boxFold7.strokeWidth = strokeW;
-boxFold7.strokeColor = foldColor;
-boxFold7.closed = false;
-boxFold7.setEntirePath(new Array(
-	[x5,  y8],
-	[x5,  y10]
+var sidefoldover_sidetoothflap_fold = newLayerRef.pathItems.add();
+sidefoldover_sidetoothflap_fold.filled = false;
+sidefoldover_sidetoothflap_fold.stroked = true;
+sidefoldover_sidetoothflap_fold.strokeWidth = strokeW;
+sidefoldover_sidetoothflap_fold.strokeColor = foldColor;
+sidefoldover_sidetoothflap_fold.closed = false;
+sidefoldover_sidetoothflap_fold.setEntirePath(new Array(
+	[x_start+x_bottom_top_edge,  y_sidefoldover_sidetoothflap],
+	[x_start+x_side_edge,  y_sidefoldover_sidetoothflap]
 ));
-var boxFold8 = newLayerRef.pathItems.add();
-boxFold8.filled = false;
-boxFold8.stroked = true;
-boxFold8.strokeWidth = strokeW;
-boxFold8.strokeColor = foldColor;
-boxFold8.closed = false;
-boxFold8.setEntirePath(new Array(
-	[x9,  y8],
-	[x9,  y10]
+var neg_sidenotchflap_side_fold = newLayerRef.pathItems.add();
+neg_sidenotchflap_side_fold.filled = false;
+neg_sidenotchflap_side_fold.stroked = true;
+neg_sidenotchflap_side_fold.strokeWidth = strokeW;
+neg_sidenotchflap_side_fold.strokeColor = foldColor;
+neg_sidenotchflap_side_fold.closed = false;
+neg_sidenotchflap_side_fold.setEntirePath(new Array(
+	[x_start-x_back_side,  y_side_sidenotchflap],
+	[x_start-x_side_edge,  y_side_sidenotchflap]
+));
+var neg_side_sidefoldover_fold = newLayerRef.pathItems.add();
+neg_side_sidefoldover_fold.filled = false;
+neg_side_sidefoldover_fold.stroked = true;
+neg_side_sidefoldover_fold.strokeWidth = strokeW;
+neg_side_sidefoldover_fold.strokeColor = foldColor;
+neg_side_sidefoldover_fold.closed = false;
+neg_side_sidefoldover_fold.setEntirePath(new Array(
+	[x_start-x_back_side,  y_side_sidefoldover],
+	[x_start-x_side_edge,  y_side_sidefoldover]
+));
+var neg_sidefoldover_sidetoothflap_fold = newLayerRef.pathItems.add();
+neg_sidefoldover_sidetoothflap_fold.filled = false;
+neg_sidefoldover_sidetoothflap_fold.stroked = true;
+neg_sidefoldover_sidetoothflap_fold.strokeWidth = strokeW;
+neg_sidefoldover_sidetoothflap_fold.strokeColor = foldColor;
+neg_sidefoldover_sidetoothflap_fold.closed = false;
+neg_sidefoldover_sidetoothflap_fold.setEntirePath(new Array(
+	[x_start-x_bottom_top_edge,  y_sidefoldover_sidetoothflap],
+	[x_start-x_side_edge,  y_sidefoldover_sidetoothflap]
+));
+var back_side_fold = newLayerRef.pathItems.add();
+back_side_fold.filled = false;
+back_side_fold.stroked = true;
+back_side_fold.strokeWidth = strokeW;
+back_side_fold.strokeColor = foldColor;
+back_side_fold.closed = false;
+back_side_fold.setEntirePath(new Array(
+	[x_start+x_back_side,  y_side_sidenotchflap],
+	[x_start+x_back_side,  y_side_sidefoldover]
+));
+var neg_back_side_fold = newLayerRef.pathItems.add();
+neg_back_side_fold.filled = false;
+neg_back_side_fold.stroked = true;
+neg_back_side_fold.strokeWidth = strokeW;
+neg_back_side_fold.strokeColor = foldColor;
+neg_back_side_fold.closed = false;
+neg_back_side_fold.setEntirePath(new Array(
+	[x_start-x_back_side,  y_side_sidenotchflap],
+	[x_start-x_back_side,  y_side_sidefoldover]
+));
+var front_frontflap_fold = newLayerRef.pathItems.add();
+front_frontflap_fold.filled = false;
+front_frontflap_fold.stroked = true;
+front_frontflap_fold.strokeWidth = strokeW;
+front_frontflap_fold.strokeColor = foldColor;
+front_frontflap_fold.closed = false;
+front_frontflap_fold.setEntirePath(new Array(
+	[x_start+x_front_frontflap,  y_front_edge],
+	[x_start+x_front_frontflap,  y_frontflap_bottomedge]
+));
+var neg_front_frontflap_fold = newLayerRef.pathItems.add();
+neg_front_frontflap_fold.filled = false;
+neg_front_frontflap_fold.stroked = true;
+neg_front_frontflap_fold.strokeWidth = strokeW;
+neg_front_frontflap_fold.strokeColor = foldColor;
+neg_front_frontflap_fold.closed = false;
+neg_front_frontflap_fold.setEntirePath(new Array(
+	[x_start-x_front_frontflap,  y_front_edge],
+	[x_start-x_front_frontflap,  y_frontflap_bottomedge]
+));
+var frontcover_frontcoverflap_fold = newLayerRef.pathItems.add();
+frontcover_frontcoverflap_fold.filled = false;
+frontcover_frontcoverflap_fold.stroked = true;
+frontcover_frontcoverflap_fold.strokeWidth = strokeW;
+frontcover_frontcoverflap_fold.strokeColor = foldColor;
+frontcover_frontcoverflap_fold.closed = false;
+frontcover_frontcoverflap_fold.setEntirePath(new Array(
+	[x_start+x_frontcover_frontcoverflap,  y_frontcoverflap_topedge],
+	[x_start+x_frontcover_frontcoverflap,  y_frontcover_edge]
+));
+var neg_frontcover_frontcoverflap_fold = newLayerRef.pathItems.add();
+neg_frontcover_frontcoverflap_fold.filled = false;
+neg_frontcover_frontcoverflap_fold.stroked = true;
+neg_frontcover_frontcoverflap_fold.strokeWidth = strokeW;
+neg_frontcover_frontcoverflap_fold.strokeColor = foldColor;
+neg_frontcover_frontcoverflap_fold.closed = false;
+neg_frontcover_frontcoverflap_fold.setEntirePath(new Array(
+	[x_start-x_frontcover_frontcoverflap,  y_frontcoverflap_topedge],
+	[x_start-x_frontcover_frontcoverflap,  y_frontcover_edge]
 ));
 
-var boxOutline = newLayerRef.pathItems.add();
-boxOutline.filled = false;
-boxOutline.stroked = true;
-boxOutline.strokeWidth = strokeW;
-boxOutline.strokeColor = cutColor;
-boxOutline.closed = true;
-boxOutline.setEntirePath(new Array(
-	[x2,  y1],
-	[x16, y1],
-	[x16, y3],
-	[x10, y4],
-	[x11, (y4+y2)/2],
-	[x12, y2],
-	[x12, y6],
-	[x9,  y8],
-	[x12, y6],
-	[x12, y5],
-	[x15, y5],
-	[x15, y12],
-	[x14, y12],
-	[x14, y13],
-	[x13, y13],
-	[x13, y12],
-	[x12, y12],
-	[x12, y9],
-	[x9,  y10],
-	[x12, y9],
-	[x12, y12],
-	[x10, y13],
-/* 	[x1, y1], */
-	[x13, y14],
-	[x13, y16],
-/* 	[x1, y1], */
-	[x9,  y15],
-	[x8,  y15],
-/* 	[x1, y1], */
-	[x4,  y16],
-	[x4,  y14],
-/* 	[x1, y1], */
-	[x8,  y13],
-	[x6,  y12],
-	[x6,  y9],
-	[x5,  y10],
-	[x6,  y9],
-	[x6,  y12],
-	[x4,  y12],
-	[x4,  y13],
-	[x3,  y13],
-	[x3,  y12],
-	[x1,  y12],
-	[x1,  y5],
-	[x6,  y5],
-	[x6,  y6],
-	[x5,  y8],
-	[x6,  y6],
-	[x6,  y2],
-	[x7,  (y4+y2)/2],
-	[x8,  y4],
-	[x2,  y3]
+var box_outline_cut = newLayerRef.pathItems.add();
+box_outline_cut.filled = false;
+box_outline_cut.stroked = true;
+box_outline_cut.strokeWidth = strokeW;
+box_outline_cut.strokeColor = cutColor;
+box_outline_cut.closed = true;
+box_outline_cut.setEntirePath(new Array(
+	[x_start+x_frontflap_edge, y_front_edge],
+	[x_start+x_frontflap_edge, y_frontflap_clearance],
+	[x_start+x_front_frontflap, y_frontflap_bottomedge],
+	[x_start+x_bottom_top_edge, y_front_bottom],
+	[x_start+x_bottom_top_edge, y_bottom_back],
+	[x_start+x_back_side, y_side_sidenotchflap],
+	[x_start+x_bottom_top_edge, y_bottom_back],
+	[x_start+x_bottom_top_edge, y_sidenotchflap_topedge],
+	[x_start+x_side_edge, y_sidenotchflap_topedge],
+	[x_start+x_side_edge, y_sidetoothflap_bottomedge],
+	[x_start+x_sidenotch_2, y_sidetoothflap_bottomedge],
+	[x_start+x_sidenotch_2, y_sidetooth_bottomedge],
+	[x_start+x_sidenotch_1, y_sidetooth_bottomedge],
+	[x_start+x_sidenotch_1, y_sidetoothflap_bottomedge],
+	[x_start+x_bottom_top_edge, y_sidetoothflap_bottomedge],
+	[x_start+x_bottom_top_edge, y_back_top],
+	[x_start+x_back_side, y_side_sidefoldover],
+	[x_start+x_bottom_top_edge, y_back_top],
+	[x_start+x_bottom_top_edge, y_top_frontcover],
+	[x_start+x_frontcover_frontcoverflap, y_frontcoverflap_topedge],
+	[x_start+x_frontcoverflap_edge, y_frontcoverflap_topclearnace],
+	[x_start+x_frontcoverflap_edge, y_frontcoverflap_bottomclearance],
+	[x_start+x_frontcover_frontcoverflap, y_frontcover_edge],
+
+	[x_start-x_frontcover_frontcoverflap, y_frontcover_edge],
+	[x_start-x_frontcoverflap_edge, y_frontcoverflap_bottomclearance],
+	[x_start-x_frontcoverflap_edge, y_frontcoverflap_topclearnace],
+	[x_start-x_frontcover_frontcoverflap, y_frontcoverflap_topedge],
+	[x_start-x_bottom_top_edge, y_top_frontcover],
+	[x_start-x_bottom_top_edge, y_back_top],
+	[x_start-x_back_side, y_side_sidefoldover],
+	[x_start-x_bottom_top_edge, y_back_top],
+	[x_start-x_bottom_top_edge, y_sidetoothflap_bottomedge],
+	[x_start-x_sidenotch_1, y_sidetoothflap_bottomedge],
+	[x_start-x_sidenotch_1, y_sidetooth_bottomedge],
+	[x_start-x_sidenotch_2, y_sidetooth_bottomedge],
+	[x_start-x_sidenotch_2, y_sidetoothflap_bottomedge],
+	[x_start-x_side_edge, y_sidetoothflap_bottomedge],
+	[x_start-x_side_edge, y_sidenotchflap_topedge],
+	[x_start-x_bottom_top_edge, y_sidenotchflap_topedge],
+	[x_start-x_bottom_top_edge, y_bottom_back],
+	[x_start-x_back_side, y_side_sidenotchflap],
+	[x_start-x_bottom_top_edge, y_bottom_back],
+	[x_start-x_bottom_top_edge, y_front_bottom],
+	[x_start-x_front_frontflap, y_frontflap_bottomedge],
+	[x_start-x_frontflap_edge, y_frontflap_clearance],
+	[x_start-x_frontflap_edge, y_front_edge]
 ));
 
-var boxNotch1 = newLayerRef.pathItems.add();
-boxNotch1.filled = false;
-boxNotch1.stroked = true;
-boxNotch1.strokeWidth = strokeW;
-boxNotch1.strokeColor = cutColor;
-boxNotch1.closed = true;
-boxNotch1.setEntirePath(new Array(
-	[x3,  y8],
-	[x3,  y7],
-	[x4,  y7],
-	[x4,  y8]
+var sidenotch_cut = newLayerRef.pathItems.add();
+sidenotch_cut.filled = false;
+sidenotch_cut.stroked = true;
+sidenotch_cut.strokeWidth = strokeW;
+sidenotch_cut.strokeColor = cutColor;
+sidenotch_cut.closed = true;
+sidenotch_cut.setEntirePath(new Array(
+	[x_start+x_sidenotch_1,  y_side_sidenotchflap],
+	[x_start+x_sidenotch_2,  y_side_sidenotchflap],
+	[x_start+x_sidenotch_2,  y_sidenotch_topedge],
+	[x_start+x_sidenotch_1,  y_sidenotch_topedge]
 ));
-var boxNotch2 = newLayerRef.pathItems.add();
-boxNotch2.filled = false;
-boxNotch2.stroked = true;
-boxNotch2.strokeWidth = strokeW;
-boxNotch2.strokeColor = cutColor;
-boxNotch2.closed = true;
-boxNotch2.setEntirePath(new Array(
-	[x13,  y8],
-	[x13,  y7],
-	[x14,  y7],
-	[x14,  y8]
+var neg_sidenotch_cut = newLayerRef.pathItems.add();
+neg_sidenotch_cut.filled = false;
+neg_sidenotch_cut.stroked = true;
+neg_sidenotch_cut.strokeWidth = strokeW;
+neg_sidenotch_cut.strokeColor = cutColor;
+neg_sidenotch_cut.closed = true;
+neg_sidenotch_cut.setEntirePath(new Array(
+	[x_start-x_sidenotch_1,  y_side_sidenotchflap],
+	[x_start-x_sidenotch_2,  y_side_sidenotchflap],
+	[x_start-x_sidenotch_2,  y_sidenotch_topedge],
+	[x_start-x_sidenotch_1,  y_sidenotch_topedge]
 ));
