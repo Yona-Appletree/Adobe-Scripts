@@ -3,6 +3,11 @@ Adobe-Scripts
 
 Collection of scripts for Adobe apps, Illustrator mostly
 
+**even_odd_images.jsx**
+*takes a folder of images (gif, jpg, png) and checks to see if width & height are even numbers. If not, it will add or crop a pixel (your choice). Useful for retina-fying images to display clearly as width: 50%*
+- Run script from Photoshop
+- choose crop or add, the anchor point corner, and a folder of images.
+
 **exchange_fill_and_stroke.jsx**
 - Select path(s) & run script.
 
