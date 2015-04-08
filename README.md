@@ -11,6 +11,8 @@ Collection of scripts for Adobe apps, Illustrator mostly
 **even_odd_images-action.jsx**
 *same as above but use this one within an action to apply on a per image basis (or within your own batch processes)*
 
+for more info about why the above are helpful, see this image scaling test page: http://jk-keller.com/scripts/even-odd-images/
+
 **exchange_fill_and_stroke.jsx**
 - Select path(s) & run script.
 
