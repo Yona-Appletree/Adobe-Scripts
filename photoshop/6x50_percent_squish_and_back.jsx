@@ -1,0 +1,1 @@
+﻿//// created by JK Keller, dilettante coder// http://jk-keller.com//var docWidth = app.activeDocument.width;var docHeight = app.activeDocument.height;app.activeDocument.resizeImage(docWidth*.06, docHeight*.5, 72, ResampleMethod.NEARESTNEIGHBOR);app.activeDocument.resizeImage(docWidth, docHeight, 72, ResampleMethod.NEARESTNEIGHBOR);

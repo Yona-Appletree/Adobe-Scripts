@@ -1,0 +1,1 @@
+﻿//// created by JK Keller, dilettante coder// http://jk-keller.com//var docHeight = app.activeDocument.height;app.activeDocument.resizeImage(app.activeDocument.width, 1, 72, ResampleMethod.BICUBIC);app.activeDocument.resizeImage(app.activeDocument.width, docHeight, 72, ResampleMethod.BICUBIC);

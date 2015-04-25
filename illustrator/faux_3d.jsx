@@ -1,9 +1,8 @@
-// 3dFo - faux 3d
+// fo3d - faux 3d
 //
 // created by JK Keller, dilettante coder
 // http://jk-keller.com
 //
-// v0.5 - 2008_10_11
 
 #target illustrator
 

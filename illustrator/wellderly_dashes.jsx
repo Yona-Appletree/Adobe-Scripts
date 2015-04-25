@@ -4,11 +4,6 @@
 // created by JK Keller, dilettante coder
 // http://jk-keller.com
 //
-// v0.6, 2008 October 18
-// 	check/alert path selection
-// 	works for one level of compound & grouped paths
-// 	dialog asks for dash variables
-// v0.5, 2007 July 27
 
 #target illustrator
 

@@ -1,5 +1,8 @@
 // Create a bunch of randomly sized rectangles
-// JK Keller
+//
+// created by JK Keller, dilettante coder
+// http://jk-keller.com
+//
 
 #target illustrator
 

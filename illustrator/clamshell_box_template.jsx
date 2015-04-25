@@ -1,3 +1,8 @@
+//
+// created by JK Keller, dilettante coder
+// http://jk-keller.com
+//
+
 #target illustrator
 
 var docRef = app.activeDocument;

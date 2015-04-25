@@ -1,6 +1,9 @@
-// author: JK Keller, dilettante coder 
 // will take any image that has an odd height or width and will add or crop a pixel
 // for getting retina images to display crisply when displaying at 50% in css
+//
+// created by JK Keller, dilettante coder
+// http://jk-keller.com
+//
 
 app.preferences.rulerUnits = Units.PIXELS;
 
