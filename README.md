@@ -3,12 +3,18 @@ Adobe-Scripts
 
 Collection of scripts for Adobe apps, Illustrator mostly
 
+**bar_graph.jsx**
+*creates a bar graph from an array of values. I know, this tool exists.*
+
 **even_odd_images-folder.jsx**
 *takes a folder of images (gif, jpg, png) and checks to see if width & height are even numbers. If not, it will add or crop a pixel (your choice). Useful for retina-fying images to display clearly as width: 50%*
 - Run script from Photoshop
 - choose crop or add, the anchor point corner, and a folder of images.
+
 **even_odd_images-action.jsx**
 *same as above but use this one within an action to apply on a per image basis (or within your own batch processes)*
+
+for more info about why the above are helpful, see this image scaling test page: http://jk-keller.com/scripts/even-odd-images/
 
 **exchange_fill_and_stroke.jsx**
 - Select path(s) & run script.
