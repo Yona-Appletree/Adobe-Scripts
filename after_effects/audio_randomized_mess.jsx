@@ -42,15 +42,15 @@ if (theComp == null || !(theComp instanceof CompItem)) {
 
           var pLevels = newDupe.audioLevels;
           var tempLevel = Math.min(0, Math.random()*-30 + 10);
-        	pLevels.setValueAtTime(newDupe.inPoint, [-40,-40]);
-        	if (chopAmount > 1.5) {
+          pLevels.setValueAtTime(newDupe.inPoint, [-40,-40]);
+          if (chopAmount > 1.5) {
             pLevels.setValueAtTime(newDupe.inPoint+.5, [tempLevel,tempLevel]);
             pLevels.setValueAtTime(newDupe.outPoint-.5, [tempLevel,tempLevel]);
-        	} else {
+          } else {
             pLevels.setValueAtTime(newDupe.inPoint+chopAmount/4, [tempLevel,tempLevel]);
             pLevels.setValueAtTime(newDupe.outPoint-chopAmount/4, [tempLevel,tempLevel]);
           };
-        	pLevels.setValueAtTime(newDupe.outPoint, [-40,-40]);
+          pLevels.setValueAtTime(newDupe.outPoint, [-40,-40]);
 
           newDupe.stretch = tempStretch;
         }
