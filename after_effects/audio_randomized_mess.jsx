@@ -13,7 +13,7 @@ if (theComp == null || !(theComp instanceof CompItem)) {
     alert('select at least one layer');
   } else {
 
-    var frameRate = 25; // probably grab this from comp
+    var fps = theComp.frameRate;
     var dupeCount = 7;
     // var dupeCount = prompt("How messy?", "10"); 
     var chopLength = 6.4;
@@ -33,12 +33,15 @@ if (theComp == null || !(theComp instanceof CompItem)) {
           var chopAmount = Math.random()*diffLength;
           var startChop = Math.random()*chopLength + (j*chopLength);
           var tempStretch = Math.random()*(diffStretchMax-diffStretchMin)+diffStretchMin;
-
-//           newDupe.name = 'dupe-';
+          
+//           newDupe.name = 'dupe-';  // why won't this rename layer?
           
           newDupe.inPoint = startChop;
           newDupe.outPoint = startChop + chopAmount;
+          // sound will offset +/- by randomish amount
           newDupe.startTime = (Math.random()*diffLength*2 - diffLength) + (startChop - startChop*(tempStretch/100));
+          // sound will overlay self, offset only by the stretch difference
+//           newDupe.startTime = ((chopAmount - chopAmount*(tempStretch/100))/2) + (startChop - startChop*(tempStretch/100));
 
           var pLevels = newDupe.audioLevels;
           var tempLevel = Math.min(0, Math.random()*-30 + 10);
